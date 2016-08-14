@@ -2,13 +2,13 @@
 #include <ESP8266WiFi.h>
 #include <DHT.h>
 
-const char* ssid = "<SSID>";
-const char* password = "<password>";
+const char* ssid = "<SSID>"; // wifi ssid
+const char* password = "<password>"; // Wifi password
+const char* server = "<IP>"; // server or URL of MQTT broker
 
 char* subscribeTopic = "incoming"; // subscribe to this topic; anything sent here will be passed into the messageReceived function
 char* tempTopic = "temperature"; //topic to publish temperatures readings to
 char* humidityTopic = "humidity"; // publish humidity readings
-const char* server = "192.168.1.72"; // server or URL of MQTT broker
 String clientName = "growbox-"; // just a name used to talk to MQTT broker
 long interval = 60000; //(ms) - 60 seconds between reports
 unsigned long resetPeriod = 86400000; // 1 day - this is the period after which we restart the CPU, to deal with odd memory leak errors
