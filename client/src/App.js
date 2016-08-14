@@ -29,9 +29,15 @@ class App extends Component {
 
   render() {
     return (
-      <div>
-      <h1>is alive : {this.state.isAlive?"up":"down"}</h1>
-      <Temperature />
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-md-4">
+            <h1>is alive : {this.state.isAlive?"up":"down"}</h1>
+          </div>
+          <div className="col-md-4">
+            <Temperature />
+          </div>
+        </div>
       </div>
     );
   }
