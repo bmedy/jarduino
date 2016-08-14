@@ -2,8 +2,8 @@
 #include <ESP8266WiFi.h>
 #include <DHT.h>
 
-const char* ssid = "TNCAP485A3B_EXT";
-const char* password = "880EACD015";
+const char* ssid = "<SSID>";
+const char* password = "<password>";
 
 char* subscribeTopic = "incoming"; // subscribe to this topic; anything sent here will be passed into the messageReceived function
 char* tempTopic = "temperature"; //topic to publish temperatures readings to
