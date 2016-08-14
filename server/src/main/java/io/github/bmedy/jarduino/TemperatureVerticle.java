@@ -2,7 +2,10 @@ package io.github.bmedy.jarduino;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.DeliveryOptions;
+import io.vertx.core.json.JsonObject;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.Logger;
 
 /**
@@ -21,8 +24,9 @@ public class TemperatureVerticle extends AbstractVerticle{
             DeliveryOptions options = new DeliveryOptions();
             options.addHeader("type", "temperature");
 
-            vertx.eventBus().send("temperature.UI", response.body(), options);
-            vertx.eventBus().send("Database.write", response.body(), options);
+            JsonObject temperature = new JsonObject().put("value", response.body()).put("date", ZonedDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+            vertx.eventBus().send("temperature.UI", temperature, options);
+            vertx.eventBus().send("Database.write", temperature, options);
         });
 
         vertx.eventBus().consumer("temperature.fetch", response -> {
@@ -30,10 +34,8 @@ public class TemperatureVerticle extends AbstractVerticle{
             log.info("received message to topic temperature.fetch with body : "+response.body());
             DeliveryOptions options = new DeliveryOptions();
             options.addHeader("type", "temperature");
-            vertx.eventBus().send("Database.fetch", null, options, result -> {
-                log.info("result database fetch:"+result.succeeded());
-                response.reply(result.result().body(),options);
-            });
+            options.addHeader("responseTopic", "temperature.UI");
+            vertx.eventBus().send("Database.fetch", null, options);
         });
     }
 }

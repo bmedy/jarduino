@@ -12,7 +12,7 @@ class Temperature extends Component {
 
   componentDidMount(){
     console.log("componentDidMount")
-    this.setState({temperatures:[{date:Date(),value:12}]});
+    this.setState({temperatures:[]});
   }
 
   componentWillMount(){
@@ -24,13 +24,9 @@ class Temperature extends Component {
 
   registerSocket(){
     this.eb.onopen = () => {
-      // eb.send('temperature.fetch', {}, (err,msg) => {
-      //   console.log("temperature.fetch");
-      //   this.setState({data: msg.body});
-      //
-      // });
+      this.eb.send('temperature.fetch');
       this.eb.registerHandler('temperature.UI', (err, msg) => {
-        this.setState({temperatures: this.state.temperatures.concat([{date:Date(),value:msg.body}])});
+        this.setState({temperatures: this.state.temperatures.concat([{date:msg.body.date,value:msg.body.value}])});
       });
     };
   }

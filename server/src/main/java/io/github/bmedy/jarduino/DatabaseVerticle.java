@@ -1,11 +1,9 @@
 package io.github.bmedy.jarduino;
 
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClient;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Logger;
@@ -35,11 +33,12 @@ public class DatabaseVerticle extends AbstractVerticle {
             log.info("to collection : "+type);
             log.info("with body : "+response.body());
 
-            JsonObject document = new JsonObject().put("date", ZonedDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME)).put("value",response.body());
+            JsonObject document = (JsonObject) response.body();
             mongoClient.save(type,document, res -> {
                 if (res.succeeded()) {
                     String id = res.result();
                     System.out.println("Saved "+ type +"with id " + id);
+                    response.reply(id);
                 } else {
                     res.cause().printStackTrace();
                 }
@@ -48,10 +47,11 @@ public class DatabaseVerticle extends AbstractVerticle {
 
         vertx.eventBus().consumer("Database.fetch", response -> {
             String type = response.headers().get("type");
-            log.info("received message to topic Database.fetch collection "+type +" with body : "+response.body());
-            mongoClient.find("temperature", new JsonObject(), res -> {
+            String responseTopic = response.headers().get("responseTopic");
+            log.info("received message to topic Database.fetch collection ["+type +"] with body : ["+response.body()+"] and reply to ["+responseTopic+"]");
+            mongoClient.find(type, new JsonObject(), res -> {
                 log.info("temperature count " + res.result().size());
-                response.reply(res.result().get(0));
+                res.result().stream().forEach(o -> vertx.eventBus().send(responseTopic,o));
             });
         });
     }
