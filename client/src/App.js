@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Temperature from './Sensors/Temperature'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+
 
 class App extends Component {
 
@@ -29,16 +31,18 @@ class App extends Component {
 
   render() {
     return (
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-md-4">
-            <h1>is alive : {this.state.isAlive?"up":"down"}</h1>
-          </div>
-          <div className="col-md-4">
-            <Temperature />
+      <MuiThemeProvider>
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-md-4">
+              <h1>is alive : {this.state.isAlive?"up":"down"}</h1>
+            </div>
+            <div className="col-md-4">
+              <Temperature />
+            </div>
           </div>
         </div>
-      </div>
+      </MuiThemeProvider>
     );
   }
 }

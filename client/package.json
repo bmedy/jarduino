@@ -45,8 +45,10 @@
   },
   "dependencies": {
     "flexboxgrid": "^6.3.1",
+    "material-ui": "^0.15.4",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
+    "react-tap-event-plugin": "^1.0.0",
     "vertx3-eventbus-client": "^3.3.2"
   },
   "scripts": {
