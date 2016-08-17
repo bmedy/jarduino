@@ -3,6 +3,7 @@ var autoprefixer = require('autoprefixer');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var paths = require('./paths');
 
 module.exports = {
@@ -21,7 +22,7 @@ module.exports = {
     publicPath: '/'
   },
   resolve: {
-    extensions: ['', '.js', '.json'],
+    extensions: ['', '.js', '.json','.scss'],
     alias: {
       // This `alias` section can be safely removed after ejection.
       // We do this because `babel-runtime` may be inside `react-scripts`,
@@ -53,11 +54,20 @@ module.exports = {
         loader: 'babel',
         query: require('./babel.dev')
       },
+      // {
+      //   test: /\.css$/,
+      //   include: [paths.appSrc, paths.appNodeModules],
+      //   loader: 'style!css!postcss'
+      // },
       {
-        test: /\.css$/,
-        include: [paths.appSrc, paths.appNodeModules],
-        loader: 'style!css!postcss'
+        test: /(\.scss|\.css)$/,
+        loader: ExtractTextPlugin.extract('style', 'css?sourceMap&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss!sass?sourceMap')
       },
+      // {
+      //   test: /\.scss$/,
+      //   include: [paths.appSrc, paths.appNodeModules],
+      //   loader: 'style!css!sass!postcss'
+      // },
       {
         test: /\.json$/,
         include: [paths.appSrc, paths.appNodeModules],
@@ -89,12 +99,21 @@ module.exports = {
   postcss: function() {
     return [autoprefixer];
   },
-  plugins: [
+ //  sassLoader: {
+ //   data: '@import "_config.scss";',
+ //   includePaths: [paths.appSrc]
+ // },
+ plugins: [
     new HtmlWebpackPlugin({
       inject: true,
       template: paths.appHtml,
       favicon: paths.appFavicon,
     }),
+    new ExtractTextPlugin({
+			filename: "css/[name].css?[hash]-[chunkhash]-[contenthash]-[name]",
+			disable: false,
+			allChunks: true
+		}),
     new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"development"' }),
     // Note: only CSS is currently hot reloaded
     new webpack.HotModuleReplacementPlugin(),

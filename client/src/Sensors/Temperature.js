@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import EventBus from 'vertx3-eventbus-client'
+import { Button } from 'react-toolbox/lib/button'
 
 
 class Temperature extends Component {
@@ -34,7 +35,7 @@ class Temperature extends Component {
   render() {
     return(
       <div>
-        <h1>temperature :</h1>
+        <h1>temperature :<Button label="Hello World!" /></h1>
         {this.state.temperatures.map((temp, idx) => {
           return (<li key={idx}>{temp.date + ' - ' + temp.value}</li>)
         })}
