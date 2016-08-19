@@ -1,23 +1,21 @@
 import React, { Component } from 'react'
 import EventBus from 'vertx3-eventbus-client'
-import { Button } from 'react-toolbox/lib/button'
+import Radium from 'radium'
 
-
+@Radium
 class Temperature extends Component {
   constructor(props){
     super(props)
     this.state = {
-      temperatures:[11]
+      temperatures:[]
     };
   }
 
   componentDidMount(){
-    console.log("componentDidMount")
     this.setState({temperatures:[]});
   }
 
   componentWillMount(){
-    console.log("componentWillMount")
     this.eb = new EventBus(window.location.protocol + '//' +
                       window.location.hostname + '/api/eventbus');
     this.registerSocket();
@@ -35,7 +33,12 @@ class Temperature extends Component {
   render() {
     return(
       <div>
-        <h1>temperature :</h1>
+        <span>{this.props.size.width + '*' + this.props.size.height}</span>
+        <h1 style={[
+            styles.base,
+            this.props.size.width === 2 && styles.two,
+            this.props.style
+          ]}>temperature :</h1>
         {this.state.temperatures.map((temp, idx) => {
           return (<li key={idx}>{temp.date + ' - ' + temp.value}</li>)
         })}
@@ -44,5 +47,14 @@ class Temperature extends Component {
   }
 }
 
+const styles = {
+  base: {
+    color: 'blue'
+  },
+
+  two: {
+    color: 'red'
+  }
+};
 
 export default Temperature;
