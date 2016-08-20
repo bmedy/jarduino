@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import EventBus from 'vertx3-eventbus-client'
+import {Card, CardHeader, CardText} from 'material-ui/Card';
 
 
 class Temperature extends Component {
@@ -33,12 +34,18 @@ class Temperature extends Component {
 
   render() {
     return(
-      <div>
-        <h1>temperature :</h1>
-        {this.state.temperatures.map((temp, idx) => {
-          return (<li key={idx}>{temp.date + ' - ' + temp.value}</li>)
-        })}
-      </div>
+      <Card>
+        <CardHeader
+          title="Temperature"
+          />
+        <CardText>
+          <ul>
+            {this.state.temperatures.map((temp, idx) => {
+              return (<li key={idx}>{temp.date + ' - ' + temp.value}</li>)
+            })}
+          </ul>
+        </CardText>
+      </Card>
     )
   }
 }
